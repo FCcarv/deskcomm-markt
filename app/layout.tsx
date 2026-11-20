@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { AberturaMarkt } from "@/components/markt/MarcaMarkt";
+import { SCRIPT_ABERTURA_MARKT } from "@/components/markt/abertura-script";
 import localFont from "next/font/local";
 import { headers } from "next/headers";
 import { Toaster } from "sonner";
@@ -357,6 +358,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             genérica self-host). */}
         <MarcaNoNavegador />
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: SCRIPT_ABERTURA_MARKT }} />
       </head>
       {/*
         `min-h-dvh` e não `min-h-screen`: `100vh` é a janela com a barra de

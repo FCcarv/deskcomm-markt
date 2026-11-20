@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { EntrarComGoogle } from "@/components/auth/EntrarComGoogle";
-import { LogoMarkt } from "@/components/markt/MarcaMarkt";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { verifyInviteToken } from "@/lib/auth/invite-token";
 import { marcaDaSaida } from "@/lib/branding/saida";
@@ -38,8 +37,6 @@ export default async function LoginPage({
   return (
     <div className="space-y-6">
       <div className="space-y-1.5 text-center">
-        {/* Markt Saúde: assinatura fixa no login. */}
-        <LogoMarkt className="mx-auto mb-4 h-12" />
         <h1 className="text-2xl font-semibold tracking-tight">{t("Entrar")}</h1>
         <p className="text-sm text-muted-foreground">{marca.nome}</p>
       </div>
