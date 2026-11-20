@@ -21,11 +21,15 @@ jobs:
     runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Versão
         id: ver
         run: |
-          base=$(node -p "require('./package.json').version")
+          # Versão do upstream = última tag vX.Y.Z da história (o package.json diz 0.1.0).
+          base=$(git describe --tags --abbrev=0 --match 'v[0-9]*' | sed 's/^v//')
           echo "base=${base}" >> "$GITHUB_OUTPUT"
           echo "tag=${base}-markt.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
 
