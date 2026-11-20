@@ -19,7 +19,14 @@ import { useT } from "@/hooks/i18n/useT";
  * `className` existe para a tarja do Modo Plataforma, que tem 40px de altura e
  * não comporta os 44px de alvo de toque do `size="icon"`.
  */
-export function ThemeToggle({ className }: { className?: string }) {
+// Markt Saúde: tema fixo no claro, sem botão de troca. O botão original segue
+// abaixo (ThemeToggleOriginal) para facilitar o merge com o upstream.
+export function ThemeToggle(_props: { className?: string }) {
+  void _props;
+  return null;
+}
+
+export function ThemeToggleOriginal({ className }: { className?: string }) {
   const t = useT();
   const { theme, setTheme } = useTheme();
 

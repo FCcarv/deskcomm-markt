@@ -12,6 +12,7 @@ import { ContadorDeCasos } from "@/components/shell/ContadorDeCasos";
 import { ContadorDaFila } from "@/components/shell/ContadorDaFila";
 import { ContadorDeTarefas } from "@/components/shell/ContadorDeTarefas";
 import { VersionFooter } from "@/components/shell/VersionFooter";
+import { RodapeMarkt, SimboloMarkt } from "@/components/markt/MarcaMarkt";
 import { LogotipoDoProduto, SimboloDoProduto } from "@/components/branding/MarcaDoProduto";
 import { marcaEhADoProduto } from "@/lib/branding";
 import { useMarcaDaInstalacao } from "@/lib/branding/contexto";
@@ -157,7 +158,11 @@ export function SidebarContent({
           collapsed ? "justify-center" : "justify-start",
         )}
       >
-        {(logo || logoEscuro) && !collapsed ? (
+        {collapsed ? (
+          // Markt Saúde: com o menu recolhido aparece SEMPRE o símbolo da marca,
+          // mesmo quando a organização tem logo própria (co-branding).
+          <SimboloMarkt className="h-8 w-8" />
+        ) : (logo || logoEscuro) ? (
           // Sem arte própria para o escuro, preserva a proteção de contraste.
           <div
             // `data-logo-selo`: sem logo do tema escuro, o selo branco do modo
@@ -193,7 +198,7 @@ export function SidebarContent({
                   // `max-w-[10rem]` + `max-w-full` não valem os dois: disputam a
                   // MESMA propriedade no CSS e só um sobrevive — a pegadinha que o
                   // review apontou, e por isso o teto é um único `min()`.
-                  "h-7 w-auto max-w-[min(10rem,100%)] object-contain",
+                  "h-10 w-auto max-w-[min(13rem,100%)] object-contain",
                   logoEscuro && "dark:hidden",
                 )}
               />
@@ -213,7 +218,7 @@ export function SidebarContent({
                 src={logoEscuro}
                 alt={nome}
                 data-logo="escuro"
-                className="hidden h-7 w-auto max-w-[min(10rem,100%)] object-contain dark:block"
+                className="hidden h-10 w-auto max-w-[min(13rem,100%)] object-contain dark:block"
               />
             ) : null}
           </div>
@@ -236,15 +241,7 @@ export function SidebarContent({
             {nome}
           </span>
         )}
-        {collapsed && !marcaDoProduto && (
-          <span aria-hidden className="text-lg font-bold text-primary">
-            {/* Spread e não `[0]`: nome começando com emoji ou acento composto
-                quebraria no meio do code point. Mesma regra de `resolveBranding`
-                — a inicial precisa acompanhar o nome que a barra mostra, senão
-                recolher o menu troca a marca. */}
-            {[...nome][0]?.toUpperCase() ?? brand.initial}
-          </span>
-        )}
+        {/* Markt Saúde: a inicial do menu recolhido foi trocada pelo SimboloMarkt acima. */}
         {/* Issue #2722 — o controle de recolher mora no ALTO, como no
             mercado: na linha da logo, à direita, quando a barra está aberta. */}
         {showCollapseControl && !collapsed && (
@@ -482,6 +479,7 @@ export function SidebarContent({
             {!collapsed && <span className="truncate">{t(ajuda.label)}</span>}
           </Link>
         )}
+        <RodapeMarkt collapsed={collapsed} />
         <VersionFooter collapsed={collapsed} onNavigate={onNavigate} />
       </div>
     </>

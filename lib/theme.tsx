@@ -127,7 +127,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     getSistemaSnapshotDoServidor,
   );
 
-  const resolvedTheme: ResolvedTheme = theme === "system" ? systemTheme : theme;
+  // Markt Saúde: o produto roda só no tema claro. `theme`/`systemTheme` seguem
+  // lidos para manter a API, mas o tema efetivo é sempre "light".
+  void systemTheme;
+  const resolvedTheme: ResolvedTheme = "light";
 
   // Aplica no DOM sempre que o tema efetivo muda. Isto não é "ler estado
   // externo" (o que o external store acima já cobre) — é o único jeito de
@@ -139,13 +142,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [resolvedTheme]);
 
   const setTheme = React.useCallback((next: Theme) => {
-    gravarTema(next);
+    // Markt Saúde: tema fixo no claro.
+    void next;
   }, []);
 
   const toggle = React.useCallback(() => {
     const atual = getTemaSnapshot();
     const resolvidoAtual = atual === "system" ? getSistemaSnapshot() : atual;
-    gravarTema(resolvidoAtual === "dark" ? "light" : "dark");
+    // Markt Saúde: tema fixo no claro.
+    void resolvidoAtual;
   }, []);
 
   const value = React.useMemo<ThemeContextValue>(

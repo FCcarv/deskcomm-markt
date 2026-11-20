@@ -1,0 +1,114 @@
+/*
+ * Markt Saúde — acabamento fixo do fork FCcarv/deskcomm-markt.
+ * Fica em arquivo próprio para não conflitar com o globals.css do upstream.
+ * Cores: teal da logo #22989d, tom escuro #1a7c80, verde-água #e8f5f5.
+ */
+
+@keyframes markt-surge {
+	from {
+		opacity: 0;
+		transform: translateY(8px) scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes markt-carrega {
+	from {
+		transform: scaleX(0);
+	}
+	to {
+		transform: scaleX(1);
+	}
+}
+
+@keyframes markt-modal {
+	from {
+		opacity: 0;
+		/* Tailwind v4 centraliza com a propriedade `translate`, separada de
+		   `transform`: animar só o scale não tira o modal do centro. */
+		transform: scale(0.96);
+	}
+}
+
+@keyframes markt-borda {
+	0% {
+		background-position: 0% 50%;
+	}
+	100% {
+		background-position: 200% 50%;
+	}
+}
+
+/* Caixas: sobem 2px e ganham borda teal no hover, como no Notika. */
+.shadow-xs.border-border {
+	transition:
+		transform 0.2s ease-out,
+		box-shadow 0.2s ease-out,
+		border-color 0.2s ease-out;
+}
+
+a.shadow-xs.border-border:hover,
+button.shadow-xs.border-border:hover,
+[role="button"].shadow-xs.border-border:hover {
+	transform: translateY(-2px);
+}
+
+/* Modais (Radix Dialog / AlertDialog): entrada com zoom suave e faixa teal
+   animada no topo. */
+[role="dialog"][data-state="open"],
+[role="alertdialog"][data-state="open"] {
+	animation: markt-modal 0.22s ease-out;
+}
+
+[role="alertdialog"][data-state="open"]::before,
+[role="dialog"][data-state="open"].markt-modal-destaque::before {
+	content: "";
+	position: absolute;
+	inset: 0 0 auto 0;
+	height: 3px;
+	border-radius: inherit;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	background: linear-gradient(90deg, #22989d, #34baab, #e8f5f5, #22989d);
+	background-size: 200% 100%;
+	animation: markt-borda 2.4s linear infinite;
+}
+
+/* Avisos (Sonner): branco com faixa teal animada à esquerda. */
+[data-sonner-toast] {
+	border-color: #22989d;
+	box-shadow: 0 8px 24px rgba(34, 152, 157, 0.22);
+	overflow: hidden;
+}
+
+[data-sonner-toast]::after {
+	content: "";
+	position: absolute;
+	inset: 0 auto 0 0;
+	width: 4px;
+	background: linear-gradient(180deg, #22989d, #34baab, #e8f5f5, #22989d);
+	background-size: 100% 200%;
+	animation: markt-borda 2.4s linear infinite;
+}
+
+[data-sonner-toast][data-type="error"]::after {
+	background: #d64545;
+	animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-sonner-toast]::after,
+	[role="alertdialog"][data-state="open"]::before,
+	[role="dialog"][data-state="open"],
+	[role="alertdialog"][data-state="open"] {
+		animation: none;
+	}
+
+	a.shadow-xs.border-border:hover,
+	button.shadow-xs.border-border:hover {
+		transform: none;
+	}
+}

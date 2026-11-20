@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { AberturaMarkt } from "@/components/markt/MarcaMarkt";
 import localFont from "next/font/local";
 import { headers } from "next/headers";
 import { Toaster } from "sonner";
@@ -29,6 +30,7 @@ import { PublicEnvScript } from "./public-env-script";
 import { EstiloDoTemaDaPlataforma } from "./tema-da-plataforma";
 import { VARIAVEIS_DAS_FONTES_DA_APARENCIA } from "./fontes-da-aparencia";
 import "./globals.css";
+import "./markt.css";
 
 // Fontes versionadas em app/fonts/ (origem e licença no README de lá): o
 // next/font/google as baixava durante o build, e o build caía quando o Google
@@ -165,7 +167,8 @@ export const viewport: Viewport = {
 
 // Inline FOUC-prevention. Conteúdo é string literal estática (zero input do usuário),
 // portanto seguro. Lê localStorage + prefers-color-scheme antes do primeiro paint.
-const THEME_INIT_SCRIPT = `(function(){try{var s=localStorage.getItem('deskcomm-theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var r=(s==='dark'||s==='light')?s:((s==='system'||!s)&&d?'dark':'light');document.documentElement.setAttribute('data-theme',r);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
+// Markt Saúde: o produto roda só no tema claro.
+const THEME_INIT_SCRIPT = `document.documentElement.setAttribute('data-theme','light');`;
 
 /**
  * Motivos já registrados neste processo. `EstiloDaMarca` roda em TODA
@@ -367,7 +370,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="min-h-dvh bg-bg font-sans text-text antialiased">
         <Providers>
           <MarcaDosClientComponents>
-            <ThemeProvider>{children}</ThemeProvider>
+            <ThemeProvider>
+              <AberturaMarkt />
+              {children}
+            </ThemeProvider>
           </MarcaDosClientComponents>
           {/*
             O AVISO VAI PARA BAIXO, e isto foi medido na tela.

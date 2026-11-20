@@ -1,0 +1,56 @@
+# Markt Saúde — monta a imagem do CRM com a identidade fixa (branch `markt`).
+# Só ARM64 por enquanto: Oracle Ampere e Hetzner CAX. Runner ARM é grátis em
+# repositório público.
+name: Markt — imagem do CRM
+
+on:
+  push:
+    branches: [markt]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: markt-imagem
+  cancel-in-progress: true
+
+jobs:
+  app-arm64:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Versão
+        id: ver
+        run: |
+          base=$(node -p "require('./package.json').version")
+          echo "base=${base}" >> "$GITHUB_OUTPUT"
+          echo "tag=${base}-markt.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/arm64
+          push: true
+          build-args: |
+            APP_VERSION=${{ steps.ver.outputs.base }}
+          tags: |
+            ghcr.io/fccarv/deskcomm-markt:${{ steps.ver.outputs.tag }}
+            ghcr.io/fccarv/deskcomm-markt:markt
+          cache-from: type=gha,scope=markt-arm64
+          cache-to: type=gha,mode=max,scope=markt-arm64
+
+      - name: Resumo
+        run: |
+          echo "Imagem: ghcr.io/fccarv/deskcomm-markt:${{ steps.ver.outputs.tag }}" >> "$GITHUB_STEP_SUMMARY"
